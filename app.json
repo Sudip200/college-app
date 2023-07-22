@@ -23,12 +23,18 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/play.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.college.hire"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3d3f74d1-db59-4420-aa7e-0a4ae77be75c"
+      }
     }
   }
 }
