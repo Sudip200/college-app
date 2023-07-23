@@ -10,7 +10,7 @@ import API from '../api';
 const COMLoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
- const [iscom,setiscom]=useState('none');
+  const [iscom,setiscom]=useState('none');
   const [show,setShow]=useState(false)
   //const [id,setId]=useState('')
   //const navigation =useNavigation()

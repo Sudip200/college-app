@@ -42,19 +42,19 @@ const RegisterScreen = ({ navigation }) => {
       <Ionicons name="school" size={100} color="#37fae6" />
       <Text style={styles.text}>Login Now</Text>
       <TextInput
-  placeholder="Your Name"
+  placeholder="College Name"
   style={styles.txtinput}
   value={name}
   onChangeText={setName}
 />
 <TextInput
-  placeholder="Enter Your Email"
+  placeholder="Enter  Email"
   style={styles.txtinput}
   value={email}
   onChangeText={setEmail}
 />
 <TextInput
-  placeholder="Enter Your Password"
+  placeholder="Create Password"
   style={styles.txtinput}
   value={password}
   onChangeText={setPassword}
