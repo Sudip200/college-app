@@ -193,7 +193,7 @@ const getStatusBarHeight = () => {
 
 
   const renderCompanyCard = ({ item }) => (
-    <TouchableOpacity onPress={()=>navigation.navigate("Company Details",{id:item.company._id})}>
+    <TouchableOpacity onPress={()=>navigation.navigate("Company Details",{id:item.company._id,colid:id})}>
     <View style={styles.card}>
       <Image source={{ uri: `${item.logo}` }} style={styles.logo} />
       <View style={styles.companyDetails}>

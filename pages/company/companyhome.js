@@ -204,7 +204,7 @@ const renderStudentCard = ({ item }) => (
   );
   const renderCompanyCard = ({ item }) => (
 
-    <TouchableOpacity onPress={()=>navigation.navigate("College Details",{id:item.college._id})}>
+    <TouchableOpacity onPress={()=>navigation.navigate("College Details",{id:item.college._id,comid:id})}>
     <View style={styles.card}>
       <Image source={{ uri: `${item.logo}` }} style={styles.logo} />
       <View style={styles.companyDetails}>

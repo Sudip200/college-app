@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Linking, Platform } fr
 import { Ionicons } from '@expo/vector-icons';
 import API from '../api';
 
-const CollegeDetails = ({ route }) => {
-  const { id } = route.params;
+const CollegeDetails = ({ route ,navigation}) => {
+  const { id,comid } = route.params;
   const [companyDetails, setCompanyDetails] = useState(null);
 
   useEffect(() => {
@@ -30,6 +30,9 @@ const CollegeDetails = ({ route }) => {
       Linking.openURL(`mailto:${companyDetails.college.email}`);
     }
   };
+  const handleMessage=()=>{
+   navigation.navigate('Msg',{collegeId:id, companyId:comid})
+  }
 
   return (
     <View style={styles.container}>
@@ -47,14 +50,18 @@ const CollegeDetails = ({ route }) => {
               </>
             ) : (
               <>
-                <TouchableOpacity style={styles.button} onPress={handleCall}>
+                {/* <TouchableOpacity style={styles.button} onPress={handleCall}>
                   <Ionicons name="call" size={24} color="white" />
                   <Text style={styles.buttonText}>Call</Text>
+                </TouchableOpacity> */}
+                <TouchableOpacity style={styles.button} onPress={handleMessage}>
+                  <Ionicons name="call" size={24} color="white" />
+                  <Text style={styles.buttonText}>Message</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={handleEmail}>
+                {/* <TouchableOpacity style={styles.button} onPress={handleEmail}>
                   <Ionicons name="mail" size={24} color="white" />
                   <Text style={styles.buttonText}>Email</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </>
             )} 
           </View>
