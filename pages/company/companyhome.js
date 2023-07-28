@@ -154,9 +154,8 @@ const CollegeHome = ({ navigation, route }) => {
   const { id } = route.params;
   const [company, setCompany] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filterst,setFilterst]=useState([])
-   const [filter,setFilter]=useState([])
   const [students,setStudent]=useState([]);
+  const [filterstudents,setFilterStudents]=useState([])
   const [search ,setSearch]=useState("")
   const [rt,setRt]=useState('st'); 
 
@@ -184,8 +183,29 @@ const getStatusBarHeight = () => {
     return StatusBar.currentHeight || 0;
   };
 
+  const filterStudents = () => {
+    console.log(students)
+    if(search===""){
+      setFilterStudents(students)
+      return
+    }
+    const filteredStudents = students.filter((student) => {
+      const { description, skill, college } = student;
+      // Check if the search input matches any part of the data
+      const searchString = search.toLowerCase();
 
+      return (
+        description.toLowerCase().includes(searchString) ||
+        skill.toLowerCase().includes(searchString) 
+      );
+    });
 
+    setFilterStudents(filterStudents);
+   
+  };
+ 
+console.log(filterstudents);
+  
 
 const renderStudentCard = ({ item }) => (
     
@@ -229,6 +249,7 @@ const renderStudentCard = ({ item }) => (
           placeholderTextColor="#37fae6"
           underlineColorAndroid="transparent"
           onChangeText={(text)=>{setSearch(text)
+            
          }}
         />
       </View>

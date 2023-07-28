@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Linking, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import API from '../api';
-
 const CollegeDetails = ({ route ,navigation}) => {
   const { id,comid } = route.params;
   const [companyDetails, setCompanyDetails] = useState(null);
@@ -30,7 +29,7 @@ const CollegeDetails = ({ route ,navigation}) => {
       Linking.openURL(`mailto:${companyDetails.college.email}`);
     }
   };
-  const handleMessage=()=>{
+  const handleMessage=async ()=>{
    navigation.navigate('Msg',{collegeId:id, companyId:comid})
   }
 
