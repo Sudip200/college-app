@@ -15,15 +15,24 @@ const LoginScreen = ({navigation}) => {
   //const [id,setId]=useState('')
   //const navigation =useNavigation()
   console.log({email,password});
-  useEffect(async ()=>{
- let result = await SecureStore.getItemAsync("id");
- let type= await SecureStore.getItemAsync("type");
-  if (result && type==="col") {
-    navigation.navigate('Collge Home',{id:result});
-  } else {
-    console.log('No values stored under that key.');  
-  }
-  },[])
+  useEffect(() => {
+    const checkUserTypeAndNavigate = async () => {
+      try {
+        let result = await SecureStore.getItemAsync("id");
+        let type = await SecureStore.getItemAsync("type");
+        if (result && type === "col") {
+          navigation.navigate('College Home', { id: result });
+        } else {
+          console.log('No values stored under that key.');
+        }
+      } catch (error) {
+        console.log('Error:', error);
+      }
+    };
+  
+    checkUserTypeAndNavigate();
+  }, []);
+  
  async function save(key, value) {
   await SecureStore.setItemAsync(key, value);
 }

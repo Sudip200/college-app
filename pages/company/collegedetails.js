@@ -54,7 +54,7 @@ const CollegeDetails = ({ route ,navigation}) => {
                   <Text style={styles.buttonText}>Call</Text>
                 </TouchableOpacity> */}
                 <TouchableOpacity style={styles.button} onPress={handleMessage}>
-                  <Ionicons name="call" size={24} color="white" />
+                  <Ionicons name="chatbox" size={24} color="white" />
                   <Text style={styles.buttonText}>Message</Text>
                 </TouchableOpacity>
                 {/* <TouchableOpacity style={styles.button} onPress={handleEmail}>
