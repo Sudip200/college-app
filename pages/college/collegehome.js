@@ -25,6 +25,8 @@ const Home = ({ route }) => {
             iconName = 'home';
           } else if (route.name === 'Settings') {
             iconName = 'settings';
+          } else{
+            iconName='chatbox'
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -41,10 +43,129 @@ const Home = ({ route }) => {
       <Tab.Screen name="Home">
         {(props) => <CollegeHome {...props} route={route} />}
       </Tab.Screen>
+      <Tab.Screen name="Chat">
+        {(props) => <ChatScreen {...props} route={route} />}
+      </Tab.Screen>
       <Tab.Screen name="Settings">
         {(props) => <SettingsScreen {...props} route={route} />}
       </Tab.Screen>
     </Tab.Navigator>
+  );
+};
+const ChatScreen = ({ navigation, route }) => {
+  const { id } = route.params;
+  const [college,setCollege] = useState([]);
+  let colleges=[]
+
+  const getStatusBarHeight=()=>{
+    return StatusBar.currentHeight
+  }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
+    justifyContent:'flex-start',
+    marginTop:getStatusBarHeight(),
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: 'white',
+  },
+  collegeItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding:20,
+    borderRadius:10,
+    elevation:5,
+    backgroundColor:'#38393b',
+    marginBottom: 10,
+  },
+  logo: {
+    width: 50,
+    height: 50,
+    marginRight: 10,
+  },
+  collegeName: {
+    fontSize: 16,
+    color: 'white',
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
+    color: 'white',
+  },
+  value: {
+    fontSize: 16,
+    marginBottom: 15,
+    color: 'white',
+  },
+  button: {
+    backgroundColor: '#37fae6',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  buttonText: {
+    fontSize: 16,
+    color: 'white',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 16,
+    color: 'white',
+  },
+}); 
+useEffect(() => {
+  fetch(`${API}/contactedcom`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ college: id })
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const collegeIds = data.map((item) =>item); // Extract college IDs from the fetched data
+      const collegeDetailPromises = collegeIds.map((colId) =>
+        fetch(`${API}/company/details/${colId}`).then((response) => response.json())
+      );
+
+      Promise.all(collegeDetailPromises)
+        .then((collegesData) => {
+          setCollege(collegesData);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}, [id]);
+//console.log(college)
+  
+
+  return (
+    <View style={styles.container}>
+    {college.length === 0 ? ( // Check if colleges is empty or not
+      <ActivityIndicator color="white" size="large" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />
+    ) : (
+      college.map((item, index) => (
+       <TouchableOpacity key={index} style={styles.collegeItem} onPress={()=>{ navigation.navigate('Msg',{collegeId:id, companyId:item.company._id})}}>
+       <Image style={styles.logo} source={{ uri: item.logo }} />
+       <Text style={styles.collegeName}>{item.company.name}</Text>
+     </TouchableOpacity>
+      ))
+    )}
+  </View>
   );
 };
 
