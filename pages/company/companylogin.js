@@ -52,7 +52,11 @@ const COMLoginScreen = ({navigation}) => {
         if (result.id) {
           setShow(false)
         console.log(result.id);
-     fetch(`${API}/company/details/${result.id}`).then((data)=>  {
+     fetch(`${API}/company/details/${result.id}`,{
+      headers:{
+        authorization:"XXLPNK"
+      }
+    }).then((data)=>  {
       return data.json()
     }).then((res)=>{
        if(res.state){

@@ -21,7 +21,7 @@ const LoginScreen = ({navigation}) => {
         let result = await SecureStore.getItemAsync("id");
         let type = await SecureStore.getItemAsync("type");
         if (result && type === "col") {
-          navigation.navigate('College Home', { id: result });
+          navigation.navigate('Collge Home', { id: result });
         } else {
           console.log('No values stored under that key.');
         }
@@ -53,7 +53,11 @@ const LoginScreen = ({navigation}) => {
         if (result.id) {
           setShow(false)
           console.log(result.id);
-     fetch(`${API}/college/details/${result.id}`).then((data)=>  {
+     fetch(`${API}/college/details/${result.id}`,{
+      headers:{
+        authorization:"XXLPNK"
+      }
+    }).then((data)=>  {
       return data.json()
     }).then((res)=>{ 
        if(res.state){

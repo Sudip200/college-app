@@ -8,6 +8,7 @@ import * as SecureStore from 'expo-secure-store';
 const Tab = createBottomTabNavigator();
 
 import API from '../api';
+import { ScrollView } from 'react-native-gesture-handler';
 const COMHome = ({ route }) => {
   return (
    <Tab.Navigator
@@ -134,7 +135,11 @@ useEffect(() => {
     .then((data) => {
       const collegeIds = data.map((item) =>item); // Extract college IDs from the fetched data
       const collegeDetailPromises = collegeIds.map((colId) =>
-        fetch(`${API}/college/details/${colId}`).then((response) => response.json())
+        fetch(`${API}/college/details/${colId}`,{
+          headers:{
+            authorization:"XXLPNK"
+          }
+        }).then((response) => response.json())
       );
 
       Promise.all(collegeDetailPromises)
@@ -154,7 +159,8 @@ useEffect(() => {
 
   return (
     <View style={styles.container}>
-    {college.length === 0 ? ( // Check if colleges is empty or not
+      <ScrollView>
+      {college.length === 0 ? ( // Check if colleges is empty or not
       <ActivityIndicator color="white" size="large" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />
     ) : (
       college.map((item, index) => (
@@ -164,6 +170,8 @@ useEffect(() => {
      </TouchableOpacity>
       ))
     )}
+      </ScrollView>
+   
   </View>
   );
 };
@@ -223,7 +231,11 @@ const styles = StyleSheet.create({
   },
 }); 
   useEffect(() => {
-    fetch(`${API}/company/details/${id}`)
+    fetch(`${API}/company/details/${id}`,{
+      headers:{
+        authorization:"XXLPNK"
+      }
+    })
       .then((response) =>{ return response.json()})
       .then((data) => {
        console.log(data)
@@ -293,14 +305,22 @@ const CollegeHome = ({ navigation, route }) => {
     if (!id) {
       navigation.navigate('College Login');
     }
-    fetch(`${API}/college/details/`) 
+    fetch(`${API}/college/details/`,{
+      headers:{
+        authorization:"XXLPNK"
+      }
+    }) 
       .then((data) => data.json())
       .then((res) => {
       
         setCompany(res);
         setLoading(false);
       });
-      fetch(`${API}/allstudents`) 
+      fetch(`${API}/allstudents`,{
+        headers:{
+          authorization:"XXLPNK"
+        }
+      }) 
       .then((data) => data.json())
       .then((res) => {
         console.log(res);
@@ -334,7 +354,7 @@ const getStatusBarHeight = () => {
    
   };
  
-console.log(filterstudents);
+
   
 
 const renderStudentCard = ({ item }) => (

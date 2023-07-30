@@ -24,6 +24,8 @@
       "bundleIdentifier": "com.college.hire"
     },
     "android": {
+      "versionCode": 2 ,
+      "blockedPermissions": ["android.permission.RECORD_AUDIO"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/play.png",
         "backgroundColor": "#FFFFFF"

@@ -9,7 +9,11 @@ const CompanyDetails = ({ route,navigation }) => {
   const [companyDetails, setCompanyDetails] = useState(null);
 
   useEffect(() => {
-    fetch(`${API}/company/details/${id}`)
+    fetch(`${API}/company/details/${id}`,{
+      headers:{
+        authorization:"XXLPNK"
+      }
+    })
       .then((response) => response.json())
       .then((data) => {
         setCompanyDetails(data);
