@@ -71,7 +71,7 @@ const MessageScreen = ({ route }) => {
 
   useEffect(() => {
     fetchMessages();
-  }, []);
+  },[]);
 
   return (
     

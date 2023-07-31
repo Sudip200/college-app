@@ -299,6 +299,7 @@ const CollegeHome = ({ navigation, route }) => {
   const [students,setStudent]=useState([]);
   const [filterstudents,setFilterStudents]=useState([])
   const [search ,setSearch]=useState("")
+
   const [rt,setRt]=useState('st'); 
 
   useEffect(() => {
@@ -332,7 +333,30 @@ const CollegeHome = ({ navigation, route }) => {
 const getStatusBarHeight = () => {
     return StatusBar.currentHeight || 0;
   };
-
+ const reSearch=()=>{
+  fetch(`${API}/searchcolname?keyword=${search}`,{
+    headers:{
+      authorization:"XXLPNK"
+    }
+  }) 
+    .then((data) => data.json())
+    .then((res) => {
+    
+      setCompany(res);
+      setLoading(false);
+    });
+    fetch(`${API}/filterstu?keyword=${search}`,{
+      headers:{
+        authorization:"XXLPNK"
+      }
+    }) 
+    .then((data) => data.json())
+    .then((res) => {
+      console.log(res);
+      setStudent(res);
+      setLoading(false);
+    });
+ }
   const filterStudents = () => {
     console.log(students)
     if(search===""){
@@ -395,11 +419,13 @@ const renderStudentCard = ({ item }) => (
        <View style={{ width: '100%', height: 60, padding: 3, alignItems: 'center', marginBottom: 10, fontSize: 16 }}>
         <TextInput 
           style={{ flex: 1, color: '#37fae6' ,width:'90%',marginBottom:5,backgroundColor: '#131314',shadowColor:'black',shadowRadius:10,borderRadius:7,elevation:6,textAlign:'center',fontSize:13}} 
-          placeholder="Search"
+          placeholder="Search ex-state,city,skill etc"
           placeholderTextColor="#37fae6"
           underlineColorAndroid="transparent"
-          onChangeText={(text)=>{setSearch(text)
-            
+          onChangeText={(text)=>{
+            setSearch(text);
+            setLoading(true)
+            reSearch()
          }}
         />
       </View>

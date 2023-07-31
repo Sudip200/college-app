@@ -308,6 +308,7 @@ const CollegeHome = ({ navigation, route }) => {
   const { id } = route.params;
   const [company, setCompany] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search,setSearch]=useState('')
   useEffect(() => {
     if (!id) {
       navigation.navigate('College Login');
@@ -328,7 +329,19 @@ const getStatusBarHeight = () => {
     return StatusBar.currentHeight || 0;
   };
 
-
+const reSearch=()=>{
+  fetch(`${API}/searchcomname?keyword=${search}`,{
+    headers:{
+      authorization:"XXLPNK"
+    }
+  })
+    .then((data) => data.json())
+    .then((res) => {
+      console.log(res); 
+      setCompany(res);
+      setLoading(false);
+    });
+}
 
   const renderCompanyCard = ({ item }) => (
     <TouchableOpacity onPress={()=>navigation.navigate("Company Details",{id:item.company._id,colid:id})}>
@@ -351,9 +364,14 @@ const getStatusBarHeight = () => {
        <View style={{ width: '100%', height: 60, padding: 3, alignItems: 'center', marginBottom: 10, fontSize: 16 }}>
         <TextInput 
           style={{ flex: 1, color: '#37fae6' ,width:'90%',marginBottom:5,backgroundColor: '#131314',shadowColor:'black',shadowRadius:10,borderRadius:7,elevation:6,textAlign:'center',fontSize:13}} 
-          placeholder="Search"
+          placeholder="Search name state city etc"
           placeholderTextColor="#37fae6"
           underlineColorAndroid="transparent"
+          onChangeText={(text)=>{
+            setSearch(text);
+            setLoading(true)
+            reSearch()
+          }}
         />
       </View>
       </Appbar.Header>
