@@ -84,6 +84,7 @@ const COMLoginScreen = ({navigation}) => {
       <TextInput
         placeholder="Enter  Email"
         style={styles.txtinput}
+        testID='companyEmail'
         onChangeText={(text) => {
           setEmail(text);
         }}
@@ -92,6 +93,7 @@ const COMLoginScreen = ({navigation}) => {
       <TextInput
         placeholder="Enter  Password"
         style={styles.txtinput}
+        testID='companyPassword'
         onChangeText={(text) => {
           setPassword(text);
         }}
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
   },
   btntxt: {
     fontSize: 17,
-    color:'white'
+    color:'black'
   },
   btn: {
     padding: 20,

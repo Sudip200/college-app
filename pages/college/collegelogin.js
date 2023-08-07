@@ -88,6 +88,7 @@ const LoginScreen = ({navigation}) => {
         placeholder="Enter Your Email"
         value={email}
         style={styles.txtinput}
+        testID='collegeEmail'
         onChangeText={(text) => {
           setEmail(text);
         }}
@@ -97,6 +98,7 @@ const LoginScreen = ({navigation}) => {
         placeholder="Enter Your Password"
         style={styles.txtinput}
         value={password}
+        testID='collegePassword'
         onChangeText={(text) => {
           setPassword(text);
         }}
@@ -129,7 +131,7 @@ const styles = StyleSheet.create({
   },
   btntxt: {
     fontSize: 17,
-    color:'white'
+    color:'black'
   },
   btn: {
     padding: 20,

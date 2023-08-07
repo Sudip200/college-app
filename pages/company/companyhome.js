@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList, Image, ActivityIndicator,StatusBar,TouchableOpacity,Linking,Button,Switch } from 'react-native';
+import { View, Text, StyleSheet, TextInput, FlatList, Image, ActivityIndicator,StatusBar,TouchableOpacity,Linking,Button,Switch,RefreshControl } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { Appbar,BottomNavigation,Card } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
@@ -55,6 +55,7 @@ const COMHome = ({ route }) => {
 const ChatScreen = ({ navigation, route }) => {
   const { id } = route.params;
   const [college,setCollege] = useState([]);
+  const [refreshing,setRefreshing]=useState(false)
   let colleges=[]
 
   const getStatusBarHeight=()=>{
@@ -145,6 +146,7 @@ useEffect(() => {
       Promise.all(collegeDetailPromises)
         .then((collegesData) => {
           setCollege(collegesData);
+          setRefreshing(false)
         })
         .catch((error) => {
           console.log(error);
@@ -153,13 +155,14 @@ useEffect(() => {
     .catch((error) => {
       console.log(error);
     });
-}, [id]);
+}, [id,refreshing]);
 //console.log(college)
   
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView refreshControl={<RefreshControl refreshing={refreshing}
+            onRefresh={()=>{setRefreshing(true)}}/>}>
       {college.length === 0 ? ( // Check if colleges is empty or not
       <ActivityIndicator color="white" size="large" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />
     ) : (
@@ -218,7 +221,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    color: 'white',
+    color: 'black',
   },
   loadingContainer: {
     flex: 1,
@@ -290,7 +293,38 @@ const styles = StyleSheet.create({
     </View>
   );
 };
-
+const SkillTabs = ({ skills }) => {
+  const skillList = skills.split(',');
+  const styles = StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    skillTab: {
+      paddingHorizontal: 2,
+      paddingVertical: 3,
+      borderRadius: 10,
+      margin:2,
+      borderWidth:2,
+      borderColor:'#37fae6',
+    },
+    skillText: {
+      color: 'white',
+     fontSize:12
+    },
+  });
+  return (
+    <View style={styles.container}>
+      {skillList.map((skill, index) => (
+        <View key={index} style={styles.skillTab}>
+          <Text style={styles.skillText}>{skill.trim()}</Text>
+        </View>
+      ))}
+    </View>
+  );
+};
 
 const CollegeHome = ({ navigation, route }) => {
   const { id } = route.params;
@@ -299,9 +333,9 @@ const CollegeHome = ({ navigation, route }) => {
   const [students,setStudent]=useState([]);
   const [filterstudents,setFilterStudents]=useState([])
   const [search ,setSearch]=useState("")
-
+  const [showFullDescription, setShowFullDescription] = useState(false);
   const [rt,setRt]=useState('st'); 
-
+  const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
     if (!id) {
       navigation.navigate('College Login');
@@ -316,6 +350,7 @@ const CollegeHome = ({ navigation, route }) => {
       
         setCompany(res);
         setLoading(false);
+        setRefreshing(false);
       });
       fetch(`${API}/allstudents`,{
         headers:{
@@ -327,9 +362,10 @@ const CollegeHome = ({ navigation, route }) => {
         console.log(res);
         setStudent(res);
         setLoading(false);
+        setRefreshing(false);
       });
   }
-  , [rt]);
+  , [rt,refreshing]);
 const getStatusBarHeight = () => {
     return StatusBar.currentHeight || 0;
   };
@@ -344,6 +380,7 @@ const getStatusBarHeight = () => {
     
       setCompany(res);
       setLoading(false);
+      setRefreshing(false);
     });
     fetch(`${API}/filterstu?keyword=${search}`,{
       headers:{
@@ -355,6 +392,7 @@ const getStatusBarHeight = () => {
       console.log(res);
       setStudent(res);
       setLoading(false);
+      setRefreshing(false);
     });
  }
   const filterStudents = () => {
@@ -387,10 +425,30 @@ const renderStudentCard = ({ item }) => (
       <Image source={{ uri: `${item.profile}` }} style={styles.logo} />
       <View style={styles.companyDetails}>
         <Text style={styles.companyName}>{item.name}</Text>
-        <Text style={styles.companyDescription}>{item.description}</Text>
-         <Text style={{color:'#37fae6',fontStyle:'italic'}}>Skills {item.skill}</Text>
+        {showFullDescription ? (
+          <Text style={styles.companyDescription}>{item.description}</Text>
+        ) : (
+          <Text style={styles.companyDescription}>{item.description.split(' ').slice(0, 4).join(' ')}...</Text>
+        )}
+        {!showFullDescription && (
+          <TouchableOpacity onPress={() => setShowFullDescription(true)} style={{ backgroundColor:'black',padding:1,borderRadius:5 ,width:50}}>
+            <Text style={{ color: 'white', fontStyle: 'italic' ,fontSize:10}}>Read More</Text>
+          </TouchableOpacity>
+        )}
+         {showFullDescription && (
+          <TouchableOpacity onPress={() => setShowFullDescription(false)} style={{ backgroundColor:'black',padding:1,borderRadius:5,width:50}}>
+            <Text style={{ color: 'white', fontStyle: 'italic',fontSize:10 }}>Read Less</Text>
+          </TouchableOpacity>
+        )}
+        {/* <Text style={styles.companyDescription}>{item.description.split(' ').slice(0, 4).join(' ')}</Text> */}
+        <SkillTabs skills={item.skill} />
         <Text style={styles.companyLocation}>College {item.college.name}</Text>
-         <Button color="#37fae6"  title="My Resume" onPress={()=>{Linking.openURL(`${item.resume}`)}}/>
+        <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+        <TouchableOpacity onPress={()=>{Linking.openURL(`tel:${item.mobile}`)}} style={{borderColor:'#37fae6',borderWidth:1,width:'50%',borderRadius:10,alignItems:'center'}}><Ionicons name='call' size={40} color={'#37fae6'}/></TouchableOpacity>
+        <View style={{width:10}}></View>
+        <TouchableOpacity onPress={()=>{Linking.openURL(`${item.resume}`)}} style={{borderColor:'#37fae6',borderWidth:1,width:'50%',borderRadius:10,alignItems:'center',height:'100%'}}><Text style={{color:'#37fae6'}}>My Resume</Text></TouchableOpacity>
+        </View>
+        
       </View>   
     </View>
     
@@ -444,6 +502,8 @@ const renderStudentCard = ({ item }) => (
     data={company}
     keyExtractor={(item) => item._id}
     renderItem={renderCompanyCard}
+    refreshing={refreshing}
+    onRefresh={() => {setRefreshing(true)}}
     contentContainerStyle={styles.companyList}
   />
 ) : ( 
@@ -451,7 +511,9 @@ const renderStudentCard = ({ item }) => (
     data={students}
     keyExtractor={(item) => item._id}
     renderItem={renderStudentCard} 
+    refreshing={refreshing}
     contentContainerStyle={styles.companyList}
+    onRefresh={() => {setRefreshing(true)}}
   />
 )
       )}

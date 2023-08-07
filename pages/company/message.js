@@ -19,6 +19,7 @@ const MessageScreen = ({ route }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [sent ,setSent]=useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const getStatusBarHeight=()=>{
     return StatusBar.currentHeight
   }
@@ -43,6 +44,7 @@ const MessageScreen = ({ route }) => {
       });
       const data = await response.json();
       setMessages(data);
+      setRefreshing(false);
     } catch (error) {
       console.error('Error fetching messages:', error);
     }
@@ -70,6 +72,7 @@ const MessageScreen = ({ route }) => {
   };
 
   useEffect(() => {
+    
     fetchMessages();
   },[]);
 
@@ -84,6 +87,8 @@ const MessageScreen = ({ route }) => {
               <Text style={styles.message}>{item.message}</Text>
             </View>
           )}
+          refreshing={refreshing}
+          onRefresh={()=>{fetchMessages()}}
           contentContainerStyle={{marginTop:getStatusBarHeight()}}
         />
         <View style={styles.inputContainer}>

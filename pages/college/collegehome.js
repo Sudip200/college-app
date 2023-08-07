@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList, Image, ActivityIndicator,StatusBar,TouchableOpacity,Linking ,Share} from 'react-native';
+import { View, Text, StyleSheet, TextInput, FlatList, Image, ActivityIndicator,StatusBar,TouchableOpacity,Linking ,Share, RefreshControl} from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { Appbar,BottomNavigation } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
@@ -56,6 +56,7 @@ const Home = ({ route }) => {
 const ChatScreen = ({ navigation, route }) => {
   const { id } = route.params;
   const [college,setCollege] = useState([]);
+  const [refreshing,setRefreshing]=useState(false)
   let colleges=[]
 
   const getStatusBarHeight=()=>{
@@ -146,6 +147,7 @@ useEffect(() => {
       Promise.all(collegeDetailPromises)
         .then((collegesData) => {
           setCollege(collegesData);
+          setRefreshing(false)
         })
         .catch((error) => {
           console.log(error);
@@ -154,13 +156,14 @@ useEffect(() => {
     .catch((error) => {
       console.log(error);
     });
-}, [id]);
+}, [id,refreshing]);
 //console.log(college)
   
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView refreshControl={<RefreshControl refreshing={refreshing}
+            onRefresh={()=>{setRefreshing(true)}}/>} >
       {college.length === 0 ? ( // Check if colleges is empty or not
       <ActivityIndicator color="white" size="large" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />
     ) : (
@@ -309,6 +312,7 @@ const CollegeHome = ({ navigation, route }) => {
   const [company, setCompany] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search,setSearch]=useState('')
+  const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
     if (!id) {
       navigation.navigate('College Login');
@@ -323,8 +327,9 @@ const CollegeHome = ({ navigation, route }) => {
         console.log(res); 
         setCompany(res);
         setLoading(false);
+        setRefreshing(false);
       });
-  }, []);
+  }, [refreshing]);
 const getStatusBarHeight = () => {
     return StatusBar.currentHeight || 0;
   };
@@ -340,6 +345,7 @@ const reSearch=()=>{
       console.log(res); 
       setCompany(res);
       setLoading(false);
+      setRefreshing(false);
     });
 }
 
@@ -384,6 +390,8 @@ const reSearch=()=>{
           data={company}
           keyExtractor={(item) => item._id}
           renderItem={renderCompanyCard}
+          refreshing={refreshing}
+          onRefresh={()=>{setRefreshing(true)}}
           contentContainerStyle={styles.companyList}
         />
       )}
