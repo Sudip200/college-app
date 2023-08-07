@@ -24,7 +24,7 @@
       "bundleIdentifier": "com.college.hire"
     },
     "android": {
-      "versionCode": 3 ,
+      "versionCode": 4 ,
       "blockedPermissions": ["android.permission.RECORD_AUDIO","android.permission.CAMERA","android.permission.USE_BIOMETRIC", "android.permission.USE_FINGERPRINT"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/play.png",
