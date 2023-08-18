@@ -17,6 +17,7 @@ import CompleteRegisterScreenCOM from './pages/company/companyaddmore'
 import CollegeDetails from './pages/company/collegedetails'
 import IntroLoginScreen from './pages/intro'
 import MessageScreen from './pages/company/message';
+import StScreen from './pages/company/student';
 const Stack = createStackNavigator();
 
 const API = '';
@@ -39,6 +40,7 @@ export default function App() {
           <Stack.Screen name="Company complete" component={CompleteRegisterScreenCOM} /> 
            <Stack.Screen name="College Details" component={CollegeDetails} />  
            <Stack.Screen name="Msg" component={MessageScreen} />  
+           <Stack.Screen name="St Details" component={StScreen} />  
       </Stack.Navigator>
     </NavigationContainer>
   );

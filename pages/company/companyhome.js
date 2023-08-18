@@ -1,10 +1,92 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList, Image, ActivityIndicator,StatusBar,TouchableOpacity,Linking,Button,Switch,RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, TextInput, FlatList, Image, ActivityIndicator,StatusBar,TouchableOpacity,Linking,Button,Switch,RefreshControl,Modal } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { Appbar,BottomNavigation,Card } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import SelectDropdown from 'react-native-select-dropdown';
 import * as SecureStore from 'expo-secure-store';
+const states = [
+  'Andhra Pradesh',
+  'Arunachal Pradesh',
+  'Assam',
+  'Bihar',
+  'Chhattisgarh',
+  'Goa',
+  'Gujarat',
+  'Haryana',
+  'Himachal Pradesh',
+  'Jharkhand',
+  'Karnataka',
+  'Kerala',
+  'Madhya Pradesh',
+  'Maharashtra',
+  'Manipur',
+  'Meghalaya',
+  'Mizoram',
+  'Nagaland',
+  'Odisha',
+  'Punjab',
+  'Rajasthan',
+  'Sikkim',
+  'Tamil Nadu',
+  'Telangana',
+  'Tripura',
+  'Uttar Pradesh',
+  'Uttarakhand',
+  'West Bengal',
+  'Andaman and Nicobar Islands',
+  'Chandigarh',
+  'Dadra and Nagar Haveli',
+  'Daman and Diu',
+  'Delhi',
+  'Lakshadweep',
+  'Puducherry'
+];
+const jobOptions = [
+  "Full Stack Developer",
+  "Frontend Developer",
+  "Backend Developer",
+  "Mobile App Developer",
+  "Data Scientist",
+  "UI/UX Designer",
+  "Software Engineer",
+  "Machine Learning Engineer",
+  "Cloud Solutions Architect",
+  "DevOps Engineer",
+  "Network Administrator",
+  "Database Administrator",
+  "Game Developer",
+  "Cybersecurity Analyst",
+  "Embedded Systems Engineer",
+  "Artificial Intelligence Specialist",
+  "Robotics Engineer",
+  "Blockchain Developer",
+  "Quality Assurance Engineer",
+  "Systems Analyst",
+  "Network Security Specialist",
+  "Project Manager",
+  "Marketing Specialist",
+  "Human Resources Manager",
+  "Business Analyst",
+  "Financial Analyst",
+  "Sales Representative",
+  "Content Writer",
+  "Graphic Designer",
+  "Customer Support Specialist",
+  "Operations Manager",
+  "Supply Chain Manager",
+  "Public Relations Specialist",
+  "Technical Writer",
+  "Event Planner",
+  "Accountant",
+  "Data Analyst",
+  "Market Research Analyst",
+  "Logistics Coordinator",
+  "Executive Assistant",
+  "Translator",
+  "Other"
+];
 const Tab = createBottomTabNavigator();
 
 import API from '../api';
@@ -335,6 +417,7 @@ const CollegeHome = ({ navigation, route }) => {
   const [search ,setSearch]=useState("")
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [rt,setRt]=useState('st'); 
+  const [show,setShow]=useState(false)
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
     if (!id) {
@@ -420,26 +503,12 @@ const getStatusBarHeight = () => {
   
 
 const renderStudentCard = ({ item }) => (
-    
+   <TouchableOpacity onPress={()=>navigation.navigate("St Details",{id:item._id})}> 
     <View style={styles.card}>
       <Image source={{ uri: `${item.profile}` }} style={styles.logo} />
       <View style={styles.companyDetails}>
         <Text style={styles.companyName}>{item.name}</Text>
-        {showFullDescription ? (
-          <Text style={styles.companyDescription}>{item.description}</Text>
-        ) : (
-          <Text style={styles.companyDescription}>{item.description.split(' ').slice(0, 4).join(' ')}...</Text>
-        )}
-        {!showFullDescription && (
-          <TouchableOpacity onPress={() => setShowFullDescription(true)} style={{ backgroundColor:'black',padding:1,borderRadius:5 ,width:50}}>
-            <Text style={{ color: 'white', fontStyle: 'italic' ,fontSize:10}}>Read More</Text>
-          </TouchableOpacity>
-        )}
-         {showFullDescription && (
-          <TouchableOpacity onPress={() => setShowFullDescription(false)} style={{ backgroundColor:'black',padding:1,borderRadius:5,width:50}}>
-            <Text style={{ color: 'white', fontStyle: 'italic',fontSize:10 }}>Read Less</Text>
-          </TouchableOpacity>
-        )}
+        
         {/* <Text style={styles.companyDescription}>{item.description.split(' ').slice(0, 4).join(' ')}</Text> */}
         <SkillTabs skills={item.skill} />
         <Text style={styles.companyLocation}>College {item.college.name}</Text>
@@ -451,7 +520,7 @@ const renderStudentCard = ({ item }) => (
         
       </View>   
     </View>
-    
+    </TouchableOpacity>
       
   );
   const renderCompanyCard = ({ item }) => (
@@ -463,7 +532,6 @@ const renderStudentCard = ({ item }) => (
         <Text style={styles.companyName}>{item.college.name}</Text>
         <Text style={styles.companyLocation}>{item.state}, {item.city}</Text>
         <Text style={styles.companyDescription}>{item.description}</Text>
-       
       </View>
     </View>
     </TouchableOpacity>
@@ -493,7 +561,47 @@ const renderStudentCard = ({ item }) => (
      <View style={{height:30,justifyContent:'center',alignItems:'center',flexDirection:'row',paddingVertical:4}}> 
       <TouchableOpacity onPress={()=>{setRt('col')}} style={styles.tab} ><Text>Colleges</Text></TouchableOpacity>
         <TouchableOpacity onPress={()=>{setRt('st')}} style={styles.tab}  ><Text>Students</Text></TouchableOpacity>
+        <TouchableOpacity onPress={()=>{setShow(true)}} style={styles.tab}  ><Text>Filter</Text></TouchableOpacity>
      </View> 
+     {show && (
+        <Modal transparent={true} visible={show}  >
+          <View style={{
+          flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center'}}>
+            <View style={{
+            width: 300,
+            height: 400,backgroundColor:'#3A3C3C',elevation:100,borderRadius:20,flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center'}}>
+              <SelectDropdown
+	data={rt==='st'?jobOptions:states}
+	onSelect={(selectedItem, index) => {
+    console.log(selectedItem, index);
+	 setSearch(selectedItem);
+    reSearch();
+	}}
+	buttonTextAfterSelection={(selectedItem, index) => {   
+		return selectedItem
+	}}
+	rowTextForSelection={(item, index) => {
+
+		return item
+	}}
+  defaultButtonText={rt==='st'?"Select Job":"Select State"}
+  style={{marginBottom:5,backgroundColor:'#37fae6'}}
+/>
+<View style={{height:20}}></View>
+<Button title="Filter" onPress={()=>{setShow(false)
+   reSearch()}} color='#37fae6'/>
+    </View>
+           
+          </View>
+          
+        </Modal>
+      )}
+
       {loading ? (
         <ActivityIndicator size="large" style={styles.loadingIndicator} />
       ) : (
@@ -519,7 +627,7 @@ const renderStudentCard = ({ item }) => (
       )}
     </View>
   );
-};
+}; 
 
 const styles = StyleSheet.create({
   container: {

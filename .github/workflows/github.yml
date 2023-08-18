@@ -1,0 +1,49 @@
+name: Android Build - React Native
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14' # Use the desired Node.js version
+
+      - name: Install Dependencies
+        run: |
+          npm install -g react-native-cli
+          npm install
+
+      - name: Build Android App
+        run: |
+          npx react-native upgrade
+          npx react-native link
+          npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+
+      - name: Set Up Android SDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11' # Use the desired Java version
+
+      - name: Build Android APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew clean
+          ./gradlew assembleDebug
+
+      - name: Archive Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
