@@ -15,6 +15,9 @@ const LoginScreen = ({ navigation }) => {
   const handleCompanyLogin = () => {
     navigation.navigate('Company Login');
   };
+  const handlesstLogin = () => {
+    navigation.navigate('St Login');
+  };
 
   return (
     <View style={styles.container}>
@@ -25,6 +28,10 @@ const LoginScreen = ({ navigation }) => {
       <TouchableOpacity style={[styles.button, styles.companyButton]} onPress={handleCompanyLogin}>
         <Ionicons name="briefcase" size={40} color="#37fae6" />
         <Text style={styles.buttonText}>Continue as Company</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={[styles.button, styles.companyButton]} onPress={handlesstLogin}>
+        <Ionicons name="book" size={40} color="#37fae6" />
+        <Text style={styles.buttonText}>Continue as Student</Text>
       </TouchableOpacity>
     </View>
   );

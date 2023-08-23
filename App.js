@@ -18,6 +18,8 @@ import CollegeDetails from './pages/company/collegedetails'
 import IntroLoginScreen from './pages/intro'
 import MessageScreen from './pages/company/message';
 import StScreen from './pages/company/student';
+import StLoginScreen from './pages/student/stlogin';
+import StHome from './pages/student/sthome';
 const Stack = createStackNavigator();
 
 const API = '';
@@ -40,7 +42,9 @@ export default function App() {
           <Stack.Screen name="Company complete" component={CompleteRegisterScreenCOM} /> 
            <Stack.Screen name="College Details" component={CollegeDetails} />  
            <Stack.Screen name="Msg" component={MessageScreen} />  
-           <Stack.Screen name="St Details" component={StScreen} />  
+           <Stack.Screen name="St Details" component={StScreen} /> 
+           <Stack.Screen name="St Login" component={StLoginScreen} /> 
+           <Stack.Screen name="St Home" component={StHome} />   
       </Stack.Navigator>
     </NavigationContainer>
   );
