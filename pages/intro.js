@@ -4,10 +4,6 @@ import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const LoginScreen = ({ navigation }) => {
-
-
-
-  
   const handleCollegeLogin = () => {
     navigation.navigate('College Login');
   };

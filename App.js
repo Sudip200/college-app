@@ -18,11 +18,9 @@ import CollegeDetails from './pages/company/collegedetails'
 import IntroLoginScreen from './pages/intro'
 import MessageScreen from './pages/company/message';
 import StScreen from './pages/company/student';
-import StLoginScreen from './pages/student/stlogin';
-import StHome from './pages/student/sthome';
+import StLoginScreen from './pages/student/StudentLogin.js';
+import StHome from './pages/student/StudentHome.js';
 const Stack = createStackNavigator();
-
-const API = '';
 
 export default function App() {
   return (
@@ -33,18 +31,18 @@ export default function App() {
    <Stack.Screen name="App Intro" component={IntroLoginScreen} />
    <Stack.Screen name="College Register" component={RegisterScreen} />
       <Stack.Screen name="College complete" component={CompleteRegisterScreen} />
-       <Stack.Screen name="College Login" component={LoginScreen}  />
-        <Stack.Screen name="Collge Home" component={Home} />
-         <Stack.Screen name="Company Details" component={CompanyDetails} />
-          <Stack.Screen name="Company Login" component={COMLoginScreen} /> 
-          <Stack.Screen name="Company Register" component={COMRegisterScreen} /> 
-           <Stack.Screen name="Company Home" component={COMHome} /> 
-          <Stack.Screen name="Company complete" component={CompleteRegisterScreenCOM} /> 
-           <Stack.Screen name="College Details" component={CollegeDetails} />  
-           <Stack.Screen name="Msg" component={MessageScreen} />  
-           <Stack.Screen name="St Details" component={StScreen} /> 
-           <Stack.Screen name="St Login" component={StLoginScreen} /> 
-           <Stack.Screen name="St Home" component={StHome} />   
+      <Stack.Screen name="College Login" component={LoginScreen}  />
+      <Stack.Screen name="Collge Home" component={Home} />
+      <Stack.Screen name="Company Details" component={CompanyDetails} />
+      <Stack.Screen name="Company Login" component={COMLoginScreen} /> 
+      <Stack.Screen name="Company Register" component={COMRegisterScreen} /> 
+      <Stack.Screen name="Company Home" component={COMHome} /> 
+      <Stack.Screen name="Company complete" component={CompleteRegisterScreenCOM} /> 
+      <Stack.Screen name="College Details" component={CollegeDetails} />  
+      <Stack.Screen name="Msg" component={MessageScreen} />  
+      <Stack.Screen name="St Details" component={StScreen} /> 
+      <Stack.Screen name="St Login" component={StLoginScreen} /> 
+      <Stack.Screen name="St Home" component={StHome} />   
       </Stack.Navigator>
     </NavigationContainer>
   );

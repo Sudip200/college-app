@@ -12,7 +12,6 @@ import * as ImagePicker from 'expo-image-picker';
 import { ScrollView } from 'react-native-gesture-handler';
 const Tab = createBottomTabNavigator();
 
-
 const StHome = ({ route }) => {
   return (
    <Tab.Navigator
