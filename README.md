@@ -4,6 +4,10 @@ CollegeHire is an application that helps connect college institutes to companies
 
 app is made with react native and expo
 # Screenshots
+<img src="https://github.com/user-attachments/assets/542aaa16-54c4-4ada-88d8-784e625ab2bc" width="300" />
+<img src="https://github.com/user-attachments/assets/f7caa1e0-0335-45d6-98ed-d8b6d3e1ed87" width="300" />
+<img src="https://github.com/user-attachments/assets/007ee502-bcda-4764-9c02-2c6d8a5b86b8" width="300" />
+<img src="https://github.com/user-attachments/assets/1cde180c-01df-4046-80df-82de8e1839cc" width="300" />
 
 
 # Completion Status
