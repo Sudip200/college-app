@@ -1,114 +1,101 @@
-import React from 'react';
-import { Text, View, StyleSheet, TextInput, Button, TouchableOpacity, FlatList,ActivityIndicator } from 'react-native';
-import { useState, useEffect } from 'react';
-import { Ionicons, AntDesign } from '@expo/vector-icons';
-import { Appbar } from 'react-native-paper';
-import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
+// Updated Company Register Screen with best practices (EncryptedStorage, styling, no comments)
+import React, { useState } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+  StatusBar,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Image
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import API from '../api';
+import * as SecureStore from 'expo-secure-store';
+
+
 const COMRegisterScreen = ({ navigation }) => {
-   const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name,setName]=useState('')
-  const [show ,setShow]=useState(false);
-  //const navigation =useNavigation()
-  const handleSubmit = () => {
-    setShow(true)
-    fetch(`${API}/company/register`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-      body: JSON.stringify({ email: email, password: password,name:name }),
-    })
-      .then((data) => {
-        return data.json();
+  const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
 
-      })
-      .then((result) => {
-         console.log(result);
-         setShow(false)
-        if (result.id) {
-         console.log(result)
-          navigation.navigate('Company complete',{id:result.id});
-        }
-      })
-      .catch((err) => {
-        alert(err);
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API}/company/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password, name }),
       });
+      const result = await res.json();
+      console.log(result)
+      setLoading(false);
+      if (result.id && result.token) {
+        await SecureStore.setItemAsync('token', result.token);
+        await SecureStore.setItemAsync('id', result.id);
+        await SecureStore.setItemAsync('type', 'com');
+        navigation.navigate('Company complete', { id: result.id });
+      }
+    } catch (error) {
+      console.log(error)
+      setLoading(false);
+    }
   };
-  return (
-    <View style={styles.subcontainer}>
-      <Ionicons name="school" size={100} color="#37fae6" />
-      <Text style={styles.text}>Register Now</Text>
-      <TextInput
-  placeholder="Company Name"
-  style={styles.txtinput}
-  value={name}
-  onChangeText={setName}
-/>
-<TextInput
-  placeholder="Enter Email"
-  style={styles.txtinput}
-  value={email}
-  onChangeText={setEmail}
-/>
-<TextInput
-  placeholder="Enter  Password"
-  style={styles.txtinput}
-  value={password}
-  onChangeText={setPassword}
-/>
 
-      {show && <ActivityIndicator size="large"/>}
-      <TouchableOpacity style={styles.btn} onPress={()=>handleSubmit()}>
-        <Text style={styles.btntxt}>Register</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Company Login')}>
-        <Text style={styles.atext}>Login here</Text>  
-      </TouchableOpacity>
-    </View>
+  return (
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F0F2F5" />
+      <ScrollView contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps="handled">
+        <Text style={styles.title}>Register Company</Text>
+        <TextInput placeholder="Company Name" style={styles.input} value={name} onChangeText={setName} />
+        <TextInput placeholder="Email" style={styles.input} keyboardType="email-address" value={email} onChangeText={setEmail} />
+        <TextInput placeholder="Password" style={styles.input} secureTextEntry value={password} onChangeText={setPassword} />
+        {loading && <ActivityIndicator size="large" color={PRIMARY} />}
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}><Text style={styles.buttonText}>Register</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Company Login')}><Text style={styles.linkText}>Already have an account? <Text style={styles.link}>Login</Text></Text></TouchableOpacity>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
-const styles = StyleSheet.create({
-  subcontainer: {
-    flex: 2,
-    gap: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor:'black'
-  },
-  text: {
-    fontSize: 20,
-    marginBottom: 20,
-  },
-  atext: {
-    color: '#37fae6',
-    marginTop: 10,
-  },
-  btntxt: {
-    fontSize: 17,
 
+const PRIMARY = "#007BFF"
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#F0F2F5' },
+  contentContainer: { flex:1 ,padding:24, alignItems: 'center', justifyContent: 'center', gap: 20 },
+  title: { fontSize: 26, fontWeight: 'bold', color: '#333' },
+  input: {
+    backgroundColor: '#fff',
+    width: '100%',
+    height: 50,
+    borderRadius: 30,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    borderColor: '#ccc',
+    borderWidth: 1,
   },
-  btn: {
-    padding: 20,
-    backgroundColor: '#37fae6',
-    width: 300,
-    borderRadius: 10,
+  button: {
+    backgroundColor:  PRIMARY,
+    paddingVertical: 14,
+    borderRadius: 40,
+    width: '100%',
     alignItems: 'center',
-    shadowColor: 'black',
-    shadowRadius: 10,
-    color: 'white',
   },
-  txtinput: {
-    color: 'black',
-    padding: 10,
-    backgroundColor: 'white',
-    height: 60,
-    width: 300,
-    marginBottom: 20,
-    borderRadius: 10,
-  },
+  buttonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+  linkText: { marginTop: 15, color: '#555', fontSize: 14 },
+  link: { color: PRIMARY, fontWeight: '600' },
+  image:{
+    width: '100%',
+    height:300,
+    marginBottom: 10,
+  }
 });
 
-export default COMRegisterScreen
+export default COMRegisterScreen;

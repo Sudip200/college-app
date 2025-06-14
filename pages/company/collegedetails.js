@@ -2,18 +2,55 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Linking, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import API from '../api';
+import * as SecureStore from 'expo-secure-store'
+const COLORS = {
+  PRIMARY: "#007BFF",
+  SECONDARY: "#6C757D",
+  SUCCESS: "#28A745",
+  WARNING: "#FFC107",
+  DANGER: "#DC3545",
+  LIGHT: "#F8F9FA",
+  DARK: "#343A40",
+  WHITE: "#FFFFFF",
+  BACKGROUND: "#F0F2F5",
+  CARD_BG: "#FFFFFF",
+  TEXT_PRIMARY: "#333333",
+  TEXT_SECONDARY: "#666666",
+  BORDER: "#E5E5E5",
+  SHADOW: "rgba(0, 0, 0, 0.1)"
+};
+
+const SPACING = {
+  xs: 4,
+  sm: 8,
+  md: 16,
+  lg: 24,
+  xl: 32,
+  xxl: 40
+};
+
+const TYPOGRAPHY = {
+  h1: { fontSize: 32, fontWeight: 'bold' },
+  h2: { fontSize: 24, fontWeight: 'bold' },
+  h3: { fontSize: 20, fontWeight: '600' },
+  body: { fontSize: 16, fontWeight: '400' },
+  caption: { fontSize: 14, fontWeight: '400' },
+  small: { fontSize: 12, fontWeight: '400' }
+};
+
 const CollegeDetails = ({ route ,navigation}) => {
   const { id,comid } = route.params;
   const [companyDetails, setCompanyDetails] = useState(null);
 
   useEffect(() => {
-    fetch(`${API}/college/details/${id}`,{
+    fetch(`${API}/college/${id}`,{
       headers:{
-        authorization:"XXLPNK"
+        authorization:`Bearer ${SecureStore.getItem('token')}`
       }
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data)
         setCompanyDetails(data);
       })
       .catch((error) => {
@@ -79,7 +116,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'black',
+    padding:SPACING.sm,
+    backgroundColor: COLORS.BACKGROUND
   },
   logo: {
     width: 150,
@@ -90,19 +128,19 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'white',
+    color: COLORS.TEXT_PRIMARY,
     marginBottom: 10,
   },
   location: {
     fontSize: 18,
-    color: 'white',
+     color: COLORS.SECONDARY,
     marginBottom: 10,
   },
   description: {
     fontSize: 16,
     marginHorizontal: 20,
     marginBottom: 20,
-    color: 'white',
+    color: COLORS.SECONDARY,
     textAlign: 'center',
   },
   buttonContainer: {
@@ -113,15 +151,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#37fae6',
-    borderRadius: 10,
+    backgroundColor: COLORS.PRIMARY,
+    borderRadius: 40,
     paddingVertical: 10,
     paddingHorizontal: 20,
+    width:'70%',
     marginHorizontal: 10,
   },
   buttonText: {
     fontSize: 18,
     marginLeft: 10,
+     color: COLORS.WHITE,
   },
   contactText: {
     fontSize: 16,
